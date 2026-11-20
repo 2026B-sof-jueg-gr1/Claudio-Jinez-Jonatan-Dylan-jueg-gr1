@@ -1,0 +1,23 @@
+name: Deploy INKBREAKER to Itch.io
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-itchio:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Publicar carpeta game/ en Itch.io con Butler
+        uses: josephbmanley/butler-publish-itchio-action@v1.0.3
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: html5
+          ITCH_GAME: inkbreaker
+          ITCH_USER: JonaDC
+          PACKAGE: game
