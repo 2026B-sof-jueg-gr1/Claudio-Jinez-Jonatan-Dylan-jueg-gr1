@@ -13,11 +13,16 @@ jobs:
       - name: Descargar repositorio
         uses: actions/checkout@v4
 
-      - name: Publicar carpeta game/ en Itch.io con Butler
-        uses: josephbmanley/butler-publish-itchio-action@v1.0.3
+      - name: Instalar Butler CLI
+        run: |
+          curl -fL --retry 5 --retry-delay 3 "https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default" -o butler.zip
+          unzip -q butler.zip
+          chmod +x butler
+          sudo mv butler /usr/local/bin/butler
+          butler -V
+
+      - name: Publicar carpeta game/ en Itch.io
         env:
-          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
-          CHANNEL: html5
-          ITCH_GAME: inkbreaker
-          ITCH_USER: JonaDC
-          PACKAGE: game
+          BUTLER_API_KEY: ${{ secrets.BUTLER_CREDENTIALS }}
+        run: |
+          butler push game/ JonaDC/inkbreaker:html5
